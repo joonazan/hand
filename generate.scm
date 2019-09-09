@@ -17,7 +17,7 @@
      (@ (pos ,(format #f "0 0 ~a" metacarpal)))
      ,(finger-geom proximal)
      (joint (@ (name ,(mcp-flex-name name)) (axis "0 1 0") (limited "true") (range "-15 90")))
-     (joint (@ (name ,(mcp-aa-name name)) (axis "1 0 0") (limited "false") (range "-25 30")))
+     (joint (@ (name ,(mcp-aa-name name)) (axis "1 0 0")))
      (body
       (@ (pos ,(format #f "0 0 ~a" proximal)))
       ,(finger-geom middle)
