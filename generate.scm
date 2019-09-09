@@ -49,6 +49,19 @@
      (joint (@ (joint ,(mcp-flex-name finger)) (coef "-0.28"))) ; -0.44 / (pi / 2)
      )))
 
+;;; Limits the difference of adjacent MCP joints
+;;; extension-slack and flexion-slack are the allowed amounts of flexion
+;;; and extension of finger a if finger b is held in place.
+(define (finger-correlation a b extension-slack flexion-slack)
+  `((fixed
+     (@ (limited "true") (range ,(format #f "-5 ~a" extension-slack)))
+     (joint (@ (joint ,(mcp-flex-name a)) (coef "-1")))
+     (joint (@ (joint ,(mcp-flex-name b)) (coef "1"))))
+    (fixed
+     (@ (limited "true") (range ,(format #f "-5 ~a" flexion-slack)))
+     (joint (@ (joint ,(mcp-flex-name a)) (coef "1")))
+     (joint (@ (joint ,(mcp-flex-name b)) (coef "-1"))))))
+
 (define finger-names '("index" "middle" "ring" "pinky"))
 
 (sxml->xml
@@ -78,5 +91,10 @@
 
    (equality ,@(map dip-pip finger-names))
 
-   (tendon ,@(append-map flex-aa-relation finger-names))
+   (tendon
+    ,@(append-map flex-aa-relation finger-names)
+    ,@(finger-correlation "index" "middle" 0.94 0.44)
+    ,@(finger-correlation "middle" "ring" 0.79 0.35)
+    ,@(finger-correlation "ring" "pinky" 0.84 0.77)
+    )
    ))
