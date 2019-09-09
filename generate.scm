@@ -55,10 +55,9 @@
  `(mujoco
    (@ (model "Hand"))
    (compiler (@ (angle "degree")))
+
    (worldbody
-    (body
-     (@ (pos "0 0.18 0") (axisangle "1 0 0 -8"))
-     ,@(finger "index" 0.8 0.45 0.25 0.2))
+    (body (@ (pos "0 0.18 0") (axisangle "1 0 0 -8")) ,@(finger "index" 0.8 0.45 0.25 0.2))
     (body ,@(finger "middle" 0.78 0.5 0.3 0.2))
     (body (@ (pos "0 -0.18 0") (axisangle "1 0 0 6")) ,@(finger "ring" 0.7 0.45 0.3 0.2))
     (body (@ (pos "0 -0.36 0") (axisangle "1 0 0 14")) ,@(finger "pinky" 0.65 0.35 0.2 0.2))
