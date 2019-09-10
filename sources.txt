@@ -1,0 +1,6 @@
+Metacarpal angles, absolute finger limits:
+An Improved Articulated Model of the Human Hand
+
+Dynamic finger constraints except rotation:
+Model-Based Analysis of Hand Posture
+
