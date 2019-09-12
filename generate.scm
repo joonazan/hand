@@ -1,10 +1,13 @@
 (use-modules
  (sxml simple)
- (ice-9 format)
- (srfi srfi-1))
+ (srfi srfi-1)
+ (srfi srfi-13))
+
+(define (number-string . nums)
+  (string-join (map number->string nums) " "))
 
 (define (finger-geom len)
-  `(geom (@ (type "capsule") (size "0.09") (fromto ,(format #f "0 0 0 0 0 ~a" len)))))
+  `(geom (@ (type "capsule") (size "0.09") (fromto ,(number-string 0 0 0 0 0 len)))))
 
 (define (pip-name finger) (string-append finger "-pip"))
 (define (dip-name finger) (string-append finger "-dip"))
@@ -14,16 +17,16 @@
 (define (finger name metacarpal proximal middle distal)
   `(,(finger-geom metacarpal)
     (body
-     (@ (pos ,(format #f "0 0 ~a" metacarpal)))
+     (@ (pos ,(number-string 0 0 metacarpal)))
      ,(finger-geom proximal)
      (joint (@ (name ,(mcp-flex-name name)) (axis "0 1 0") (limited "true") (range "-15 90")))
      (joint (@ (name ,(mcp-aa-name name)) (axis "1 0 0")))
      (body
-      (@ (pos ,(format #f "0 0 ~a" proximal)))
+      (@ (pos ,(number-string 0 0 proximal)))
       ,(finger-geom middle)
       (joint (@ (name ,(pip-name name)) (axis "0 1 0") (limited "true") (range "-5 120")))
       (body
-       (@  (pos ,(format #f "0 0 ~a" middle)))
+       (@  (pos ,(number-string 0 0 middle)))
        ,(finger-geom distal)
        (joint (@ (name ,(dip-name name)) (axis "0 1 0") (limited "true") (range "-5 90")))
        )))))
@@ -54,11 +57,11 @@
 ;;; and extension of finger a if finger b is held in place.
 (define (finger-correlation a b extension-slack flexion-slack)
   `((fixed
-     (@ (limited "true") (range ,(format #f "-5 ~a" extension-slack)))
+     (@ (limited "true") (range ,(number-string -5 extension-slack)))
      (joint (@ (joint ,(mcp-flex-name a)) (coef "-1")))
      (joint (@ (joint ,(mcp-flex-name b)) (coef "1"))))
     (fixed
-     (@ (limited "true") (range ,(format #f "-5 ~a" flexion-slack)))
+     (@ (limited "true") (range ,(number-string -5 flexion-slack)))
      (joint (@ (joint ,(mcp-flex-name a)) (coef "1")))
      (joint (@ (joint ,(mcp-flex-name b)) (coef "-1"))))))
 
