@@ -7,7 +7,7 @@
   (string-join (map number->string nums) " "))
 
 (define (finger-geom len)
-  `(geom (@ (type "capsule") (size "0.09") (fromto ,(number-string 0 0 0 0 0 len)))))
+  `(geom (@ (type "capsule") (size "0.9") (fromto ,(number-string 0 0 0 0 0 len)))))
 
 (define (pip-name finger) (string-append finger "-pip"))
 (define (dip-name finger) (string-append finger "-dip"))
@@ -70,13 +70,14 @@
 (sxml->xml
  `(mujoco
    (@ (model "Hand"))
+
    (compiler (@ (angle "degree")))
 
    (worldbody
-    (body (@ (pos "0 0.18 0") (axisangle "1 0 0 -8")) ,@(finger "index" 0.8 0.45 0.25 0.2))
-    (body ,@(finger "middle" 0.78 0.5 0.3 0.2))
-    (body (@ (pos "0 -0.18 0") (axisangle "1 0 0 6")) ,@(finger "ring" 0.7 0.45 0.3 0.2))
-    (body (@ (pos "0 -0.36 0") (axisangle "1 0 0 14")) ,@(finger "pinky" 0.65 0.35 0.2 0.2))
+    (body (@ (pos "0 1.8 0") (axisangle "1 0 0 -8")) ,@(finger "index" 8 4.5 2.5 2))
+    (body ,@(finger "middle" 7.8 5 3 2))
+    (body (@ (pos "0 -1.8 0") (axisangle "1 0 0 6")) ,@(finger "ring" 7 4.5 3 2))
+    (body (@ (pos "0 -3.6 0") (axisangle "1 0 0 14")) ,@(finger "pinky" 6.5 3.5 2 2))
 
     (body
      (@ (pos "0 0.18 -0.17"))
