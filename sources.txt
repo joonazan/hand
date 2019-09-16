@@ -4,3 +4,6 @@ An Improved Articulated Model of the Human Hand
 Dynamic finger constraints except rotation:
 Model-Based Analysis of Hand Posture
 
+Thumb:
+A Kinematic Thumb Model for the ACT Hand
+Reported Anatomical Variability Naturally Leads to Multimodal Distributions of Denavit-Hartenberg Parameters for the Human Thumb

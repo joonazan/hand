@@ -67,6 +67,31 @@
 
 (define finger-names '("index" "middle" "ring" "pinky"))
 
+(define (degrees->radians x) (* 3.14159 (/ x 180)))
+
+(define (dh-link theta-degrees alpha-degrees d r minangle maxangle child)
+  (let ((theta (degrees->radians theta-degrees))
+	(alpha (degrees->radians alpha-degrees)))
+      `(body
+	(@
+	 (pos ,(number-string r 0 d))
+	 (xyaxes ,(number-string
+		   (cos theta) (sin theta) 0
+		   (- (* (sin theta) (cos alpha)))
+		   (* (cos theta) (cos alpha))
+		   (sin alpha)
+		   )))
+	(geom (@ (type "sphere") (size "1")))
+	(joint (@ (axis "0 0 1") (limited "true") (range ,(number-string minangle maxangle))))
+	,child)))
+
+(define (dh-assembly links)
+  (fold
+   (lambda (next acc)
+     (apply dh-link (append next (list acc))))
+   '(body (geom (@ (type "sphere") (size 0.1))))
+   links))
+
 (sxml->xml
  `(mujoco
    (@ (model "Hand"))
@@ -79,19 +104,16 @@
     (body (@ (pos "0 -1.8 0") (axisangle "1 0 0 6")) ,@(finger "ring" 7 4.5 3 2))
     (body (@ (pos "0 -3.6 0") (axisangle "1 0 0 14")) ,@(finger "pinky" 6.5 3.5 2 2))
 
-    (body
-     (@ (pos "0 0.18 -0.17"))
-     (geom (@ (type "capsule") (size "0.12") (fromto "0 0.2 0 0 0.25 0.43")))
-     (joint (@ (axis "0 0 1") (limited "true") (range "-90 25")))
-     (joint (@ (axis "1 0 0") (limited "true") (range "-50 30")))
-     (body
-      (@ (pos "0 0.25 0.43"))
-      (geom (@ (type "capsule") (size "0.1") (fromto "0 0 0 0 0 0.3")))
-      (joint (@ (axis "0 1 0") (limited "true") (range "-10 45")))
-      (body
-       (@ (pos "0 0 0.3"))
-       (geom (@ (type "capsule") (size "0.1") (fromto "0 0 0 0 0 0.2")))
-       (joint (@ (axis "0 1 0") (limited "true") (range "-20 90")))))))
+    (body (@ (pos "0 4 0") (axisangle "0 0 1 -45"))
+	  ,(dh-assembly
+	    '((0 0 3.42 0.03 0 1)
+	      (74.47 94.89 -0.71 0 0 1)
+	      (-18.41 106.43 -1.16 3.99 -25 90)
+	      (4.08 -110.37 0.85 0.31 -10 10)
+	      (16.81 88.41 -0.51 4.45 -25 45)
+	      (-85.11 -86.86 0.21 1.31 -22 22)
+	      (0 -93.86 0.59 -0.12 -22 22)
+	      ))))
 
    (equality ,@(map dip-pip finger-names))
 
